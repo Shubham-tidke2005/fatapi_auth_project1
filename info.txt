@@ -1,0 +1,14 @@
+mkdir folder_name
+ python -m venv .myenv
+ myenv\Scripts\activate 
+ pip install "fastapi[standard]"
+ uvicorn src.models.app:app --reload
+ 
+
+
+frontend
+ npm create vite
+ npm run dev
+ npm i react-router-dom
+ npm install tailwindcss @tailwindcss/vite
+ npm install axios                        
