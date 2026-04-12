@@ -16,7 +16,7 @@ const NavBar = () => {
       <Link to={'/login'} className="mr-5 hover:text-gray-900">Login</Link>
       <Link to={'/register'} className="mr-5 hover:text-gray-900">Register</Link>
     </nav>
-    <button class="inline-flex items-center bg-gray-300 border-0 py-1 px-3 focus:outline-none hover:bg-gray-400 rounded text-base mt-4 md:mt-0 text-red-500 ">Logout
+    <button className="inline-flex items-center bg-gray-300 border-0 py-1 px-3 focus:outline-none hover:bg-gray-400 rounded text-base mt-4 md:mt-0 text-red-500 ">Logout
       
     </button>
   </div>

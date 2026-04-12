@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from src.routes.PublicRoute import route as publicRoute
+from src.routes.AuthRoute import route as AuthRoute
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -17,3 +18,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(publicRoute)
+app.include_router(AuthRoute)

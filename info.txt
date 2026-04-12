@@ -3,6 +3,7 @@ mkdir folder_name
  myenv\Scripts\activate 
  pip install "fastapi[standard]"
  uvicorn src.models.app:app --reload
+ pip install bcrypt python-dotenv motor
  
 
 
