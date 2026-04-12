@@ -12,3 +12,8 @@ frontend
  npm i react-router-dom
  npm install tailwindcss @tailwindcss/vite
  npm install axios                        
+import { FaEye, FaEyeSlash } from "react-icons/
+
+
+
+ tailbock ----(header)
