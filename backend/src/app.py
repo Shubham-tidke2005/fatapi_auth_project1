@@ -5,6 +5,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+@app.get('/')
+def well_come():
+    return {
+        'message':'well_come to auth project fatapi apis'
+    }
+
 origins = [
     "http://localhost",
     "*",
