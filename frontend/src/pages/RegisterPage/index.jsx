@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 function RegisterPage() {
 
   const [showPassword, setShowPassword] = useState(false);
-  let [isLoding,setisloding]=useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const initialValues={
     name: "",
     email: "",
@@ -26,16 +26,16 @@ function RegisterPage() {
 
   let onsubmitHandler=async (values,helpers)=>{
     try{
-      setisloding(true);
+      setIsLoading(true);
       let res= await axiosClient.post("/auth/register",values);
       let data=res.data;
       // console.log(data);
       toast.success(data.message);
       helpers.resetForm();
     }catch(error){
-      
+      toast.error(error.response?.data?.detail || error.message)
     }finally{
-      setisloding(false);
+      setIsLoading(false);
     }
   }
 
@@ -85,7 +85,7 @@ function RegisterPage() {
 
 
         
-          <AuthLoaderButton  isLoding={isLoding} text={'Register'} className={' '}/>
+          <AuthLoaderButton  isLoading={isLoading} text={'Register'} className={' '}/>
         </Form>
         </Formik>
 

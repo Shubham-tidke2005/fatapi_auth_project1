@@ -1,5 +1,5 @@
 from fastapi import APIRouter,HTTPException,status
-from ..models.User import User as UserModel
+from ..models.User import User as UserModel,UserLogin
 from ..config.db import db
 import bcrypt
 
@@ -33,4 +33,30 @@ async def registerUser(data:UserModel):
     return {
         "message":"sucessfully Register",
         "document":document
+    }
+    
+@route.post("/login")
+async def loginUser(data:UserLogin):
+    data=data.dict()
+    
+    #check id email alredy exist
+    user_exists=await authCollection.find_one({"email":data["email"]},{
+        
+    })
+    if not user_exists:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="USER NOT FOUND")
+    
+    
+    is_match=bcrypt.checkpw(data["password"].encode(),user_exists["password"].encode())    
+    
+    if is_match:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Invalid Password")
+    
+    user_exists['_id']=str(user_exists['_id'])
+    del user_exists["password"]
+    
+    return {
+        "message":"sucessfully Login",
+        "data":user_exists
+       
     }

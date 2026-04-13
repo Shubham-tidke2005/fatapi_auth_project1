@@ -10,3 +10,8 @@ class User(BaseModel):
     mobile:str=""
     address:str=""
     
+    
+class UserLogin(BaseModel):
+    email:EmailStr=Field(...,description="Enter Email")
+    password:str=Field(...,description="Enter Password")
+    
