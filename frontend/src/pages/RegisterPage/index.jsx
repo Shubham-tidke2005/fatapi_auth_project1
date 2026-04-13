@@ -5,6 +5,7 @@ import AuthLoaderButton from '../../components/AuthLoaderButton';
 import {Form,ErrorMessage,Formik, Field} from 'formik'
 import * as yup from 'yup'
 import { axiosClient } from '../../utils/axiosClient';
+import { toast } from 'react-toastify';
 
 
 function RegisterPage() {
@@ -27,11 +28,12 @@ function RegisterPage() {
     try{
       setisloding(true);
       let res= await axiosClient.post("/auth/register",values);
-      let data=res.data
-      console.log(data);
+      let data=res.data;
+      // console.log(data);
+      toast.success(data.message);
       helpers.resetForm();
-    }catch{
-
+    }catch(error){
+      
     }finally{
       setisloding(false);
     }
