@@ -6,30 +6,37 @@ import RegisterPage from './pages/RegisterPage'
 import NavBar from './components/NavBar'
 import Footer from './components/Footer'
 import { axiosClient } from './utils/axiosClient'
+import MainContextProvider from './context/MainContext'
 
 const App = () => {
 
-  let cheackServerHealth=async ()=>{
+  let checkServerHealth=async ()=>{
     let res=await axiosClient.get("/health");
     let data=await res.data;
     console.log(data);
   }
 
   useEffect(()=>{
-    cheackServerHealth();
+    checkServerHealth();
   },[])
 
+  
   return (
-    <div>
-      <h1 className='font-extrabold'><NavBar/></h1>
+    <MainContextProvider>
+      <div>
+        <NavBar />
+        
         <Routes>
-          <Route path="/" Component={HomePage}/>
-          <Route path='/login' Component={LoginPage}/>
-          <Route path='/register' Component={RegisterPage}/>
+          <Route path="/" Component={HomePage} />
+          <Route path="/login" Component={LoginPage} />
+          <Route path="/register" Component={RegisterPage} />
         </Routes>
-      <h1 className='font-extrabold'><Footer/></h1>
-    </div>
+
+        <Footer />
+      </div>
+    </MainContextProvider>
   )
+
 }
 
 export default App

@@ -1,4 +1,5 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useState, useContext } from 'react'
+import { axiosClient } from '../utils/axiosClient';
 
 
 
@@ -8,16 +9,23 @@ export const useMainContext=()=>useContext(mainContext)
 
 export const MainContextProvider = ({children}) => {
 
-    let [loading,setLoading]=useState(false);
+    let [loading,setLoading]=useState(true);
 
-    const fetchProfile=()=>{
+    const fetchProfile=async ()=>{
         try{
             setLoading(true);
+            let res=await axiosClient.get("/auth/profile");
+            let data=await res.data;
+            console.log(data)
         }catch(error){
 
         }finally{
             setLoading(false)
         }
+    }
+
+    if(loading){
+        return <div>loading...</div>  
     }
   return (
    
