@@ -28,9 +28,10 @@ function RegisterPage() {
     try{
       setIsLoading(true);
       let res= await axiosClient.post("/auth/register",values);
-      let data=res.data;
+      let data=await res.data;
       // console.log(data);
       toast.success(data.message);
+      localStorage.setItem("token",data.token)
       helpers.resetForm();
     }catch(error){
       toast.error(error.response?.data?.detail || error.message)

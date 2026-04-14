@@ -2,6 +2,12 @@ from fastapi import APIRouter,HTTPException,status
 from ..models.User import User as UserModel,UserLogin
 from ..config.db import db
 import bcrypt
+import jwt
+import os
+
+
+
+JWT_AUTH=os.getenv("JWT_AUTH","")
 
 route=APIRouter(prefix="/api/v1/auth")
 
@@ -29,11 +35,14 @@ async def registerUser(data:UserModel):
     })
     
     document["_id"] = str(document["_id"])
+    encoded_jwt = jwt.encode({"userId":document["_id"]}, JWT_AUTH, algorithm="HS256")
     
     return {
         "message":"sucessfully Register",
-        "document":document
+        "token":encoded_jwt
     }
+    
+    
     
 @route.post("/login")
 async def loginUser(data:UserLogin):
@@ -54,9 +63,16 @@ async def loginUser(data:UserLogin):
     
     user_exists['_id']=str(user_exists['_id'])
     del user_exists["password"]
-    
+
+    encoded_jwt = jwt.encode({"userId":user_exists["_id"]}, JWT_AUTH, algorithm="HS256")
+   
     return {
         "message":"sucessfully Login",
-        "data":user_exists
+        "token":encoded_jwt
        
     }
+    
+    
+@route.get("/profile")
+def userProfile():
+    return "id"
