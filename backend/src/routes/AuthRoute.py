@@ -1,17 +1,31 @@
-from fastapi import APIRouter,HTTPException,status
+from fastapi import APIRouter,HTTPException,status,Depends
+from fastapi.security import HTTPBearer,HTTPAuthorizationCredentials
 from ..models.User import User as UserModel,UserLogin
 from ..config.db import db
 import bcrypt
 import jwt
 import os
+from bson import ObjectId
+
 
 
 
 JWT_AUTH=os.getenv("JWT_AUTH","")
-
 route=APIRouter(prefix="/api/v1/auth")
 
 authCollection=db["user"]
+
+security=HTTPBearer()
+
+#getting token
+async def get_current_user(credentials:HTTPAuthorizationCredentials=Depends(security)):
+    try:
+        token=credentials.credentials
+        payload=jwt.decode(token,JWT_AUTH,algorithms="HS256")
+        return payload
+    except:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="INVALID TOKEN")
+
 
 @route.post("/register")
 async def registerUser(data:UserModel):
@@ -58,7 +72,7 @@ async def loginUser(data:UserLogin):
     
     is_match=bcrypt.checkpw(data["password"].encode(),user_exists["password"].encode())    
     
-    if is_match:
+    if not is_match:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Invalid Password")
     
     user_exists['_id']=str(user_exists['_id'])
@@ -74,5 +88,11 @@ async def loginUser(data:UserLogin):
     
     
 @route.get("/profile")
-def userProfile():
-    return "id"
+async def userProfile(data:str=Depends(get_current_user)):
+    user_id = data["userId"]
+    document=await authCollection.find_one({"_id":ObjectId(user_id)},{
+        "password":0
+    })
+    document['_id']=str(document['_id'])
+    return document
+   

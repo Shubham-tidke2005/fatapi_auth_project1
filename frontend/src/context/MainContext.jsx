@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react'
+import React, { createContext, useState, useContext, useEffect } from 'react'
 import { axiosClient } from '../utils/axiosClient';
 
 
@@ -13,8 +13,14 @@ export const MainContextProvider = ({children}) => {
 
     const fetchProfile=async ()=>{
         try{
+            const token=localStorage.getItem("token") || "";
+            if(!token){return;}
             setLoading(true);
-            let res=await axiosClient.get("/auth/profile");
+            let res=await axiosClient.get("/auth/profile",{
+                headers:{
+                    'Authorization':'Bearer '+token
+                }
+            });
             let data=await res.data;
             console.log(data)
         }catch(error){
@@ -22,14 +28,19 @@ export const MainContextProvider = ({children}) => {
         }finally{
             setLoading(false)
         }
+
     }
+
+    useEffect(()=>{
+            fetchProfile();
+        },[])
 
     if(loading){
         return <div>loading...</div>  
     }
   return (
    
-    <mainContext.Provider value={fetchProfile}>{children}</mainContext.Provider>
+    <mainContext.Provider value={{fetchProfile}}>{children}</mainContext.Provider>
    
   )
 }
