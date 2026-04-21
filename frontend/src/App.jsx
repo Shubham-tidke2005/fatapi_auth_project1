@@ -7,6 +7,8 @@ import NavBar from './components/NavBar'
 import Footer from './components/Footer'
 import { axiosClient } from './utils/axiosClient'
 import MainContextProvider from './context/MainContext'
+import ProtectedLayout from './layout/ProtectedLayout'
+import ProfilePage from './pages/ProfilePage'
 
 const App = () => {
 
@@ -27,7 +29,10 @@ const App = () => {
         <NavBar />
         
         <Routes>
-          <Route path="/" Component={HomePage} />
+          <Route path="/" Component={ProtectedLayout}>
+            <Route index Component={HomePage} />
+            <Route path="/profile" Component={ProfilePage} />
+          </Route>
           <Route path="/login" Component={LoginPage} />
           <Route path="/register" Component={RegisterPage} />
         </Routes>

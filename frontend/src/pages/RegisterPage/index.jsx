@@ -6,12 +6,16 @@ import {Form,ErrorMessage,Formik, Field} from 'formik'
 import * as yup from 'yup'
 import { axiosClient } from '../../utils/axiosClient';
 import { toast } from 'react-toastify';
+import { useMainContext } from '../../context/MainContext';
+import { useNavigate } from 'react-router-dom';
 
 
 function RegisterPage() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const {fetchProfile}=useMainContext();
+  const navigate=useNavigate();
   const initialValues={
     name: "",
     email: "",
@@ -32,6 +36,8 @@ function RegisterPage() {
       // console.log(data);
       toast.success(data.message);
       localStorage.setItem("token",data.token)
+      await fetchProfile();
+      navigate("/");
       helpers.resetForm();
     }catch(error){
       toast.error(error.response?.data?.detail || error.message)

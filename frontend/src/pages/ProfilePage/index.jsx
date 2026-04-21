@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaMobile } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
 import AuthLoaderButton from '../../components/AuthLoaderButton';
 import {Form,ErrorMessage,Formik, Field} from 'formik'
@@ -10,33 +10,33 @@ import { useMainContext } from '../../context/MainContext';
 
 
 
-function LoginPage() {
+function ProfilePage() {
 
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const {fetchProfile} = useMainContext();
+  const {fetchProfile,data} = useMainContext();
   const navigate=useNavigate();
   const initialValues={
-    email: "",
-    password: ""
+    name:data.name ||  "",
+    address:data.address || "",
+    mobile:data.mobile || ""
   };
 
   const validationSchema=yup.object({
-    email:yup.string().email("Email must valid").required("email is Required"),
-    password:yup.string().required("password is Required")
+    name:yup.string().required("name is Required"),
+    address:yup.string().optional(),
+    mobile:yup.string().optional()
   })
 
   let onsubmitHandler=async (values,helpers)=>{
     try{
       setIsLoading(true);
-      let res= await axiosClient.post("/auth/login",values);
+      let res= await axiosClient.post("/auth/profile",values);
       let data=await res.data;
       // console.log(data);
       toast.success(data.message);
-      localStorage.setItem("token",data.token)
+     
       await fetchProfile();
       navigate("/");
-      helpers.resetForm();
     }catch(error){
       toast.error(error.response?.data?.detail || error.message)
     }finally{
@@ -49,52 +49,43 @@ function LoginPage() {
       <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-8">
         
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-          Login Into Account
+          Update Your Profile
         </h2>
         <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={onsubmitHandler}>
         <Form className="space-y-5">
-          
-
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <Field type="email" name="email" id="email" placeholder="Enter your email"
+            <label className="block text-sm font-medium text-gray-700">Name</label>
+            <Field type="text" name="name" id="name" placeholder="Enter your name"
               className="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400"/>
-              <ErrorMessage name="email" className='text-red-500' component={'p'}/>
+              <ErrorMessage name="name" className='text-red-500' component={'p'}/>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
-
-            <div className="relative mt-1">
-              <Field
-                type={showPassword ? "text" : "password"} name="password" id="password"
-                placeholder="Enter password"
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400"
-              />
-              <ErrorMessage name="password" className='text-red-500' component={'p'}/>
-
-              <span
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-3 cursor-pointer text-gray-600"
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
-            </div>
+            <label className="block text-sm font-medium text-gray-700">address</label>
+            <Field type="textarea" name="address" id="address" placeholder="Enter your address"
+              className="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400"/>
+              <ErrorMessage name="address" className='text-red-500' component={'p'}/>
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700">mobile</label>
+            <Field type="text" name="mobile" id="mobile" placeholder="Enter your email"
+              className="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400"/>
+              <ErrorMessage name="mobile" className='text-red-500' component={'p'}/>
+          </div>
 
-        
-          <AuthLoaderButton  isLoading={isLoading} text={'Login'} className={' '}/>
+         <AuthLoaderButton  isLoading={isLoading} text={'Update'} className={' '}/>
+
         </Form>
         </Formik>
 
-        <p className="text-sm text-center text-gray-500 mt-4">
+        {/* <p className="text-sm text-center text-gray-500 mt-4">
           Do not have an account? <span className="text-indigo-500 cursor-pointer"><Link to={'/register'} className="mr-5 hover:text-gray-900">Register</Link></span>
-        </p>
+        </p> */}
 
       </div>
     </div>
   )
 }
 
-export default LoginPage
+export default ProfilePage

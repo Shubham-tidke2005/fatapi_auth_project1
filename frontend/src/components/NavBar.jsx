@@ -1,7 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import { useMainContext } from '../context/MainContext';
 
 const NavBar = () => {
+
+  const {data}=useMainContext();
+  let {Logout}=useMainContext();
+
   return (
     <header className="text-gray-600 body-font bg-white">
   <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
@@ -13,12 +18,22 @@ const NavBar = () => {
     </a>
     <nav className="md:ml-auto flex flex-wrap items-center mr-7 text-base justify-center">
       <Link to={'/'} className="mr-5 hover:text-gray-900">Home</Link>
-      <Link to={'/login'} className="mr-5 hover:text-gray-900">Login</Link>
-      <Link to={'/register'} className="mr-5 hover:text-gray-900">Register</Link>
-    </nav>
-    <button className="inline-flex items-center bg-gray-300 border-0 py-1 px-3 focus:outline-none hover:bg-gray-400 rounded text-base mt-4 md:mt-0 text-red-500 ">Logout
+      {
+        data ? (
+            <button onClick={Logout} className="inline-flex items-center bg-gray-300 border-0 py-1 px-3 focus:outline-none hover:bg-gray-400 rounded text-base mt-4 md:mt-0 text-red-500">
+            Logout
+            </button>
+        ) : (
+             <>
+                <Link to="/login" className="mr-5 hover:text-gray-900">Login</Link>
+                <Link to="/register" className="mr-5 hover:text-gray-900">Register</Link>
+              </>
+            )
+      }
       
-    </button>
+      
+    </nav>
+    
   </div>
 </header>
 
