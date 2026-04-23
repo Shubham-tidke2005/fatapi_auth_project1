@@ -105,4 +105,7 @@ async def userProfile(data:UserUpdate,user:str=Depends(get_current_user)):
     return {
         "msg":"profile Updated"
     }
+    
+    
+    ...
   
