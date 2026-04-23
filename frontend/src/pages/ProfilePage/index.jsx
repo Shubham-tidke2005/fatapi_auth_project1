@@ -30,7 +30,11 @@ function ProfilePage() {
   let onsubmitHandler=async (values,helpers)=>{
     try{
       setIsLoading(true);
-      let res= await axiosClient.post("/auth/profile",values);
+      let res= await axiosClient.put("/auth/profile",values,{
+        headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
+      });
       let data=await res.data;
       // console.log(data);
       toast.success(data.message);
@@ -62,7 +66,7 @@ function ProfilePage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700">address</label>
-            <Field type="textarea" name="address" id="address" placeholder="Enter your address"
+            <Field type="text" as="textarea" name="address" id="address" placeholder="Enter your address"
               className="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400"/>
               <ErrorMessage name="address" className='text-red-500' component={'p'}/>
           </div>

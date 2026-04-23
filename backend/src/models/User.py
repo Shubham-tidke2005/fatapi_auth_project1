@@ -15,3 +15,7 @@ class UserLogin(BaseModel):
     email:EmailStr=Field(...,description="Enter Email")
     password:str=Field(...,description="Enter Password")
     
+class UserUpdate(BaseModel):
+    name:str=Field(...,description="Enter name")
+    address:str
+    mobile:str

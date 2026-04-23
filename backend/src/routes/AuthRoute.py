@@ -1,6 +1,6 @@
 from fastapi import APIRouter,HTTPException,status,Depends
 from fastapi.security import HTTPBearer,HTTPAuthorizationCredentials
-from ..models.User import User as UserModel,UserLogin
+from ..models.User import User as UserModel,UserLogin,UserUpdate
 from ..config.db import db
 import bcrypt
 import jwt
@@ -96,3 +96,13 @@ async def userProfile(data:str=Depends(get_current_user)):
     document['_id']=str(document['_id'])
     return document
    
+   
+@route.put("/profile")
+async def userProfile(data:UserUpdate,user:str=Depends(get_current_user)):
+    await authCollection.find_one_and_update({"_id":ObjectId(user["userId"])},{
+       "$set":data.dict()
+    })
+    return {
+        "msg":"profile Updated"
+    }
+  
