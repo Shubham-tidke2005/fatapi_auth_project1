@@ -10,6 +10,8 @@ backend/__pycache__/
 
 # Env files
 .env
+backend/.env
+frontend/.env
 
 # OS files
 .DS_Store
